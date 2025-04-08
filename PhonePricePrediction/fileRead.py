@@ -1,6 +1,8 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+
 
 def file_read():
     # Get the main.py directory
@@ -14,7 +16,7 @@ def file_read():
 
     # Split data
     x_train_unscaled = train_df.drop(columns=["price_range"])
-    y_train = train_df["price_range"] # Values 0, 1, 2, 3
+    y_train = train_df["price_range"]  # Values 0, 1, 2, 3
     x_test_unscaled = test_df.drop(columns=["id"])
 
     # Scale
