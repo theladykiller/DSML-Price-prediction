@@ -1,2 +1,2 @@
-def diagram(x_train, y_train):
+def diagram(columns, target):
     pass
