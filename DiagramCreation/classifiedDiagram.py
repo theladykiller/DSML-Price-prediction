@@ -33,7 +33,7 @@ def classified_diagram(columns, target):
     # Plot the distribution of each feature (column) for each class
     for column in data.columns[:-2]:  # Exclude 'target' and 'target_label' columns
         plt.figure(figsize=(8, 6))
-        sns.histplot(data=data, x=column, hue='target_label', multiple="stack", palette=palette, kde=True)
+        sns.histplot(data=data, x=column, hue='target_label', multiple="stack", palette=palette, kde=False, element="bars", stat="count")
         plt.title(column)
         plt.xlabel('Value')
         plt.ylabel('Frequency')
