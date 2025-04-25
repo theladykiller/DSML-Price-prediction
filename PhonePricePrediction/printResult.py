@@ -1,7 +1,7 @@
 import numpy as np
 from tabulate import tabulate
 
-def printResult(y_hat, prediction_details):
+def print_result(y_hat, prediction_details):
     # list of rows for the table
     table_data = []
     for idx, (price, details) in enumerate(zip(y_hat, prediction_details), 1):
