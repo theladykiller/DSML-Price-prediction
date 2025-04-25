@@ -37,6 +37,6 @@ def classified_diagram(columns, target):
         plt.title(column)
         plt.xlabel('Value')
         plt.ylabel('Frequency')
-        plt.legend(title='Price Range', loc='upper right', labels=['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost'])
+        plt.legend(title='Price Range', labels=['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost'])
         plt.tight_layout()
         plt.show()
