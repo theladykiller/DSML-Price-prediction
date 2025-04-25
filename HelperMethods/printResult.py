@@ -30,7 +30,7 @@ def print_result(y_hat, prediction_details):
     print("SUMMARY STATISTICS".center(80))
     print("=" * 80)
     print(f"Number of predictions: {len(y_hat)}".center(80))
-    print(f"Average predicted price: ${np.mean(y_hat):,.2f}".center(80))
+    print(f"Average predicted price class: {np.mean(y_hat):,.2f}".center(80))
     print(f"Average distance to neighbors: {np.mean([d['avg_distance'] for d in prediction_details]):.3f}".center(80))
 
     # Print detailed information for each prediction
@@ -40,7 +40,7 @@ def print_result(y_hat, prediction_details):
 
     for details in prediction_details:
         print(f"\nTest Point [{details['test_point']}]:")
-        print(f"  Predicted Price: ${details['predicted_price']:,.2f}")
+        print(f"  Predicted Price class: {details['predicted_price']:,.2f}")
         print(f"  Average Distance: {details['avg_distance']:.3f}")
         print(f"  Nearest Neighbor Indices: {details['nearest_neighbors']}")
         print(f"  Neighbor Labels: {details['neighbor_labels']}")

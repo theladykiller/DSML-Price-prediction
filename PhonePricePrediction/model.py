@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
 def knn_predict(x_train, y_train, x_test, k):
     results = []
     all_details = []
