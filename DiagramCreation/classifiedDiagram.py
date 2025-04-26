@@ -32,11 +32,34 @@ def classified_diagram(columns, target):
 
     # Plot the distribution of each feature (column) for each class
     for column in data.columns[:-2]:  # Exclude 'target' and 'target_label' columns
-        plt.figure(figsize=(8, 6))
-        sns.histplot(data=data, x=column, hue='target_label', multiple="stack", palette=palette, kde=False, element="bars", stat="count")
+        plt.figure(figsize=(6, 6))
+        ax = sns.histplot(
+            data=data, x=column, hue='target_label', multiple="stack",
+            palette=palette, kde=False, element="bars", stat="count"
+        )
+
+        # Add the labels inside the bars
+        for p in ax.patches:
+            height = p.get_height()
+            if height > 10:
+                ax.annotate(
+                    f'{int(height)}',
+                    (p.get_x() + p.get_width() / 2., p.get_y() + height / 2.),
+                    ha='center', va='center', fontsize=8, color='white', weight='bold'
+                )
+
         plt.title(column)
         plt.xlabel('Value')
         plt.ylabel('Frequency')
         plt.legend(title='Price Range', labels=['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost'])
         plt.tight_layout()
+
+        '''
+        INSTRUCTIONS
+        plt.show() only shows plots without saving
+        plt.savefig() & plt.close() saves images into Plots directory
+        You may want to chose one or the other
+        '''
         plt.show()
+        #plt.savefig(f'../Plots/{column}.png')
+        #plt.close()
