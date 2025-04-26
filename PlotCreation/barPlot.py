@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from matplotlib.patches import Rectangle
 
-def classified_plot(columns, target):
+def bar_plot(columns, target):
     # Create a DataFrame for easier manipulation
     data = pd.DataFrame(columns)
     data['target'] = target

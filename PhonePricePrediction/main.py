@@ -2,8 +2,8 @@ from HelperMethods.fileRead import file_read
 from HelperMethods.printResult import print_result
 from HelperMethods.DataScale import data_scale
 
-from PlotCreation.plot import plot
-from PlotCreation.classifiedPlot import classified_plot
+from PlotCreation.regressionCurvePlot import regression_curve_plot
+from PlotCreation.barPlot import bar_plot
 
 from model import knn_predict
 
@@ -11,8 +11,8 @@ from model import knn_predict
 x_train, y_train, x_test = file_read()
 
 # Explore Data
-plot(x_train, y_train)
-classified_plot(x_train, y_train)
+bar_plot(x_train, y_train)
+regression_curve_plot(x_train, y_train)
 
 # Scale Data
 x_train, x_test = data_scale(x_train, x_test)
