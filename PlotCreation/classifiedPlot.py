@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from matplotlib.patches import Rectangle
 
-def classified_diagram(columns, target):
+def classified_plot(columns, target):
     # Create a DataFrame for easier manipulation
     data = pd.DataFrame(columns)
     data['target'] = target
@@ -56,7 +56,6 @@ def classified_diagram(columns, target):
         plt.ylabel('Frequency')
         plt.legend(title='Price Range', labels=['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost'])
         plt.tight_layout()
-
         '''
         INSTRUCTIONS
         plt.show() only shows plots without saving

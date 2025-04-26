@@ -2,8 +2,8 @@ from HelperMethods.fileRead import file_read
 from HelperMethods.printResult import print_result
 from HelperMethods.DataScale import data_scale
 
-from DiagramCreation.diagram import diagram
-from DiagramCreation.classifiedDiagram import classified_diagram
+from PlotCreation.plot import plot
+from PlotCreation.classifiedPlot import classified_plot
 
 from model import knn_predict
 
@@ -11,8 +11,8 @@ from model import knn_predict
 x_train, y_train, x_test = file_read()
 
 # Explore Data
-diagram(x_train, y_train)
-classified_diagram(x_train, y_train)
+plot(x_train, y_train)
+classified_plot(x_train, y_train)
 
 # Scale Data
 x_train, x_test = data_scale(x_train, x_test)
