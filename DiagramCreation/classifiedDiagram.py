@@ -1,6 +1,9 @@
-import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
+import seaborn as sns
+
+import matplotlib.pyplot as plt
+
+from matplotlib.patches import Rectangle
 
 def classified_diagram(columns, target):
     # Create a DataFrame for easier manipulation
@@ -39,7 +42,7 @@ def classified_diagram(columns, target):
         )
 
         # Add the labels inside the bars
-        for p in ax.patches:
+        for p in ax.patches:    # type: Rectangle
             height = p.get_height()
             if height > 10:
                 ax.annotate(
