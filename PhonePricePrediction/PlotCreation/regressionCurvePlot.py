@@ -64,5 +64,5 @@ def regression_curve_plot(columns, target):
         You may want to chose one or the other
         '''
         plt.show()
-        # plt.savefig(f'../Plots/{column}.png')
-        # plt.close()
+        #plt.savefig(f'../Plots/Curve_{column}.png')
+        #plt.close()

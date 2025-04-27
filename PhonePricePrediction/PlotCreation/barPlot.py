@@ -63,5 +63,5 @@ def bar_plot(columns, target):
         You may want to chose one or the other
         '''
         plt.show()
-        #plt.savefig(f'../Plots/{column}.png')
+        #plt.savefig(f'../Plots/Bar_{column}.png')
         #plt.close()
