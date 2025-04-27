@@ -1,6 +1,6 @@
-from HelperMethods.fileRead import file_read
-from HelperMethods.printResult import print_result
-from HelperMethods.DataScale import data_scale
+from PhonePricePrediction.HelperMethods.fileRead import file_read
+from PhonePricePrediction.HelperMethods.printResult import print_result
+from PhonePricePrediction.HelperMethods.DataScale import data_scale
 
 from PlotCreation.regressionCurvePlot import regression_curve_plot
 from PlotCreation.barPlot import bar_plot

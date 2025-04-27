@@ -3,10 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 def file_read():
-    # Get the main.py directory
-    current_dir = Path(__file__).resolve().parent
-    # Navigate to the Data folder relative to main.py
-    data_dir = current_dir.parent / 'Data'
+    data_dir = Path(__file__).resolve().parent.parent.parent / "data"
 
     # Load the CSV files
     train_df = pd.read_csv(data_dir / 'train.csv', sep=',')
