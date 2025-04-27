@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 import matplotlib.pyplot as plt
 
@@ -13,12 +14,9 @@ def regression_curve_plot(columns, target):
         2: 'High Cost',
         3: 'Very High Cost'
     }
-    # Replace target values with the custom labels
     data['target_label'] = data['target'].map(cost_labels)
-    # Set the correct order of categories
     cost_categories = ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']
 
-    # Create a color palette for the target classes (using the string labels)
     palette = {
         'Very Low Cost': 'green',
         'Low Cost': 'blue',
@@ -26,28 +24,29 @@ def regression_curve_plot(columns, target):
         'Very High Cost': 'red'
     }
 
-    # Plot
     for column in data.columns[:-2]:
         plt.figure(figsize=(6, 6))
 
-        # Draw dots
         mean_values = []
-        for label in cost_categories:
+        for idx, label in enumerate(cost_categories):
             subset = data[data['target_label'] == label]
-            x = [label] * len(subset)
             y = subset[column]
-            plt.scatter(
-                x, y, color=palette[label],
-                alpha=0.7, edgecolor='k', s=40
-            )
-            # Calculate mean values for each class
+
+            unique_values = subset[column].dropna().unique()
+            if set(unique_values).issubset({0, 1}):
+                # No jitter for 0, 1
+                plt.scatter([idx] * len(subset), y, color=palette[label], alpha=0.7, edgecolor='k', s=40)
+            else:
+                # Apply jitter to other values
+                x = np.random.normal(loc=idx, scale=0.08, size=len(subset))
+                plt.scatter(x, y, color=palette[label], alpha=0.7, edgecolor='k', s=40)
+
             mean_value = subset[column].mean()
             mean_values.append(mean_value)
 
         # Draw line graph for mean values
-        plt.plot(cost_categories, mean_values, color='black', marker='o', linestyle='-', label='Mean Value per Class', linewidth=2)
+        plt.plot(range(len(cost_categories)), mean_values, color='black', marker='o', linestyle='-', label='Mean Value per Class', linewidth=2)
 
-        # Check if the feature only contains 0 and 1
         unique_values = data[column].dropna().unique()
         if set(unique_values).issubset({0, 1}):
             plt.ylim(-0.1, 1.1)
@@ -58,7 +57,7 @@ def regression_curve_plot(columns, target):
         plt.ylabel('Value')
         plt.xlabel('')
         plt.title(column)
-        plt.xticks(ticks=cost_categories)
+        plt.xticks(ticks=range(len(cost_categories)), labels=cost_categories)
         plt.legend(title='Legend', loc='upper right')
         plt.tight_layout()
         '''

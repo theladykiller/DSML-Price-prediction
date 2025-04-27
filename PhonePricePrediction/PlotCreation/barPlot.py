@@ -54,10 +54,12 @@ def bar_plot(columns, target):
         if set(unique_values).issubset({0, 1}):
             plt.xlim(-0.1, 1.1)
             plt.xticks([0, 1], labels=["No", "Yes"])
+            plt.xlabel('')
+        else:
+            plt.xlabel('Value')
 
         # Styling
         plt.title(column)
-        plt.xlabel('Value')
         plt.ylabel('Frequency')
         plt.legend(title='Price Range', labels=['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost'])
         plt.tight_layout()
