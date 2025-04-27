@@ -17,10 +17,8 @@ def bar_plot(columns, target):
         2: 'High Cost',
         3: 'Very High Cost'
     }
-
     # Replace target values with the custom labels
     data['target_label'] = data['target'].map(cost_labels)
-
     # Set the correct order of categories
     cost_categories = ['Very High Cost', 'High Cost', 'Low Cost', 'Very Low Cost']
     data['target_label'] = pd.Categorical(data['target_label'], categories=cost_categories, ordered=True)
@@ -33,7 +31,7 @@ def bar_plot(columns, target):
         'Very High Cost': 'red'
     }
 
-    # Plot the distribution of each feature (column) for each class
+    # Plot
     for column in data.columns[:-2]:  # Exclude 'target' and 'target_label' columns
         plt.figure(figsize=(6, 6))
         ax = sns.histplot(
@@ -51,6 +49,13 @@ def bar_plot(columns, target):
                     ha='center', va='center', fontsize=8, color='white', weight='bold'
                 )
 
+        # Check if the feature only contains 0 and 1
+        unique_values = data[column].dropna().unique()
+        if set(unique_values).issubset({0, 1}):
+            plt.xlim(-0.1, 1.1)
+            plt.xticks([0, 1], labels=["No", "Yes"])
+
+        # Styling
         plt.title(column)
         plt.xlabel('Value')
         plt.ylabel('Frequency')

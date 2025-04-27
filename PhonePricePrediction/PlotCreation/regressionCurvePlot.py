@@ -1,4 +1,5 @@
 import pandas as pd
+
 import matplotlib.pyplot as plt
 
 def regression_curve_plot(columns, target):
@@ -12,8 +13,12 @@ def regression_curve_plot(columns, target):
         2: 'High Cost',
         3: 'Very High Cost'
     }
+    # Replace target values with the custom labels
     data['target_label'] = data['target'].map(cost_labels)
+    # Set the correct order of categories
+    cost_categories = ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']
 
+    # Create a color palette for the target classes (using the string labels)
     palette = {
         'Very Low Cost': 'green',
         'Low Cost': 'blue',
@@ -21,8 +26,7 @@ def regression_curve_plot(columns, target):
         'Very High Cost': 'red'
     }
 
-    cost_categories = ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']
-
+    # Plot
     for column in data.columns[:-2]:
         plt.figure(figsize=(6, 6))
 
@@ -46,7 +50,7 @@ def regression_curve_plot(columns, target):
         # Check if the feature only contains 0 and 1
         unique_values = data[column].dropna().unique()
         if set(unique_values).issubset({0, 1}):
-            plt.ylim(-0.1, 1.1)  # Force the y-axis between -0.1 and 1.1
+            plt.ylim(-0.1, 1.1)
             plt.yticks([0, 0.5, 1], labels=["No", "Center", "Yes"])
             plt.axhline(0.5, color='black', linestyle='-', linewidth=0.5)
 
