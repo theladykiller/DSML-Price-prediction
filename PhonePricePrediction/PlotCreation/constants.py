@@ -6,7 +6,7 @@ cost_labels = {
     3: 'Very High Cost'
 }
 
-cost_categories = ['Very High Cost', 'High Cost', 'Low Cost', 'Very Low Cost']
+cost_categories = ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']
 #cost_categories = list(cost_labels.values())[::-1]
 
 palette = {
