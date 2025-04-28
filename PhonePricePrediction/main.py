@@ -3,15 +3,15 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 
-from PhonePricePrediction.HelperMethods.fileRead import file_read
-from PhonePricePrediction.HelperMethods.dataScale import data_scale
+from HelperMethods.fileRead import file_read
+from HelperMethods.dataScale import data_scale
 
-from PhonePricePrediction.PlotCreation.constants import cost_labels, cost_categories,palette
-from PhonePricePrediction.PlotCreation.barPlot import bar_plot
-from PhonePricePrediction.PlotCreation.regressionCurvePlot import regression_curve_plot
-from PhonePricePrediction.PlotCreation.highToLowEndPlot import low_to_high_end_plot
+from PlotCreation.constants import cost_labels, cost_categories,palette
+from PlotCreation.barPlot import bar_plot
+from PlotCreation.regressionCurvePlot import regression_curve_plot
+from PlotCreation.highToLowEndPlot import low_to_high_end_plot
 
-from PhonePricePrediction.model import knn_predict
+from model import knn_predict
 
 x_train, y_train, x_test = file_read()
 
