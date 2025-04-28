@@ -10,7 +10,6 @@ def bar_plot(columns, target, use_plotly=False):
     data = pd.DataFrame(columns)
     data['target'] = target
 
-
     # Replace target values with the custom labels
     data['target_label'] = data['target'].map(cost_labels)
     # Set the correct order of categories
