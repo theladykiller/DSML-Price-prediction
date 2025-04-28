@@ -1,6 +1,6 @@
 import numpy as np
 from tabulate import tabulate
-
+#IST NICHT MEHR NÖTIG
 def print_result(y_hat, prediction_details):
     # list of rows for the table
     table_data = []

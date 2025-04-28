@@ -1,9 +1,11 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.graph_objects as go
+from .constants import cost_labels, cost_categories,palette
 
 
-def low_to_high_end_plot(columns, target):
+def low_to_high_end_plot(columns, target, use_plotly=False):
     # Calculate the mean value for each data point (row)
     mean_values = columns.mean(axis=1)
 
@@ -13,54 +15,36 @@ def low_to_high_end_plot(columns, target):
         'target': target
     })
 
-    # Map target to labels
-    cost_labels = {
-        0: 'Very Low Cost',
-        1: 'Low Cost',
-        2: 'High Cost',
-        3: 'Very High Cost'
-    }
     data['target_label'] = data['target'].map(cost_labels)
-
-    # Set correct order
-    cost_categories = ['Very High Cost', 'High Cost', 'Low Cost', 'Very Low Cost']
+    # Set the correct order
     data['target_label'] = pd.Categorical(data['target_label'], categories=cost_categories, ordered=True)
 
-    # Plot
-    plt.figure(figsize=(8, 6))
-    sns.stripplot(
-        data=data,
-        x='mean_value',
-        y='target_label',
-        hue='target_label',
-        palette={
-            'Very Low Cost': 'green',
-            'Low Cost': 'blue',
-            'High Cost': 'purple',
-            'Very High Cost': 'red'
-        },
-        dodge=False,
-        jitter=True,  # Spread points a bit for better visibility
-        alpha=0.7,
-        size=5,
-        marker='o'
-    )
+    if use_plotly:
+        fig = go.Figure()
 
-    # Set x-axis ticks
-    plt.xticks([0.15, 0.775], labels=["Low-End", "High-End"])
-    plt.xlim(0.1, 0.825)
+        for label in cost_categories:
+            subset = data[data['target_label'] == label]
+            
+            fig.add_trace(go.Box(
+                y=subset['mean_value'],
+                name=label,
+                marker_color=palette[label],
+                boxpoints='all',  # zeige alle Punkte
+                jitter=0.3,       # Punkte streuen
+                pointpos=-1.8     # Position der Punkte
+            ))
 
-    plt.xlabel('')
-    plt.ylabel('')
-    plt.title('Device Position from Low-End to High-End by Average Feature Value')
-    plt.legend([], [], frameon=False)
-    plt.tight_layout()
-    '''
-    INSTRUCTIONS
-    plt.show() only shows plots without saving
-    plt.savefig() & plt.close() saves images into Plots directory
-    You may want to chose one or the other
-    '''
-    plt.show()
-    #plt.savefig(f'../Plots/LowToHighEndPlot.png')
-    #plt.close()
+        fig.update_layout(
+            title='Device Position from Low-End to High-End by Average Feature Value',
+            yaxis_title='Average Feature Value',
+            xaxis_title='',
+            showlegend=False,
+            xaxis=dict(
+                ticktext=["Low-End", "High-End"],
+                tickvals=[0.15, 0.775],
+                range=[0.1, 0.825]
+            )
+        )
+        return [fig]
+    return None
+    #else wenn ich matplotlib benutzen möchte

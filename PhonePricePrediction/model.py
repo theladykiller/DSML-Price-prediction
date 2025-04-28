@@ -2,19 +2,19 @@ import numpy as np
 import pandas as pd
 
 def knn_predict(x_train, y_train, x_test, k):
+    # Datentyp-Überprüfung und Konvertierung
+    x_train = np.asarray(x_train, dtype=np.float64)
+    y_train = np.asarray(y_train, dtype=np.int64)
+    x_test = np.asarray(x_test, dtype=np.float64)
+
     results = []
     all_details = []
 
     for i, tp in enumerate(x_test):
         # Calculate Manhattan distance to all training points
         distances = np.sum(np.abs(x_train - tp), axis=1)
-
         knn_indices = np.argsort(distances)[:k]
-
-        # labels of k-nearest neighbors
         knn_labels = y_train[knn_indices]
-
-        # Find the most frequent class
         yhat = int(pd.Series(knn_labels).mode()[0])
 
         # Compute mean Manhattan distance of neighbors
