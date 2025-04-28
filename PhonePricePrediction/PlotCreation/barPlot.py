@@ -1,9 +1,9 @@
 import pandas as pd
+import plotly.graph_objects as go
+from .constants import cost_labels, cost_categories,palette
+#from matplotlib.patches import Rectangle
 #import seaborn as sns
 #import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-#from matplotlib.patches import Rectangle
-from .constants import cost_labels, cost_categories,palette
 
 def bar_plot(columns, target, use_plotly=False):
     # Create a DataFrame for easier manipulation

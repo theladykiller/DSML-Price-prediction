@@ -1,8 +1,8 @@
 import pandas as pd
-#import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.graph_objects as go
 from .constants import cost_labels, cost_categories,palette
+#import matplotlib.pyplot as plt
+#import seaborn as sns
 
 
 def low_to_high_end_plot(columns, target, use_plotly=False):

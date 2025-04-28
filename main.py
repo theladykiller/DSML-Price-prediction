@@ -1,13 +1,13 @@
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
-#import plotly.graph_objects as go
 from PhonePricePrediction.PlotCreation.constants import cost_labels, cost_categories,palette
 from PhonePricePrediction.HelperMethods.fileRead import file_read
 from PhonePricePrediction.PlotCreation.barPlot import bar_plot
 from PhonePricePrediction.PlotCreation.regressionCurvePlot import regression_curve_plot
 from PhonePricePrediction.PlotCreation.highToLowEndPlot import low_to_high_end_plot
 from PhonePricePrediction.model import knn_predict
+#import plotly.graph_objects as go
 
 x_train, y_train, x_test = file_read()
 
