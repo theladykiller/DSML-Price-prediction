@@ -1,2 +1,5 @@
 # Ignore all .idea files and directories
 .idea/
+
+# Ignore pycache
+__pycache__/
