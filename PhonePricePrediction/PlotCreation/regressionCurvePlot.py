@@ -1,71 +1,97 @@
 import pandas as pd
-import numpy as np
+import plotly.graph_objects as go
+from .constants import cost_labels, cost_categories,palette
+#import numpy as np
+#import matplotlib.pyplot as plt
+#import seaborn as sns
 
-import matplotlib.pyplot as plt
-
-def regression_curve_plot(columns, target):
-    # Create a DataFrame
+def prepare_data(columns, target):
     data = pd.DataFrame(columns)
     data['target'] = target
-
-    cost_labels = {
-        0: 'Very Low Cost',
-        1: 'Low Cost',
-        2: 'High Cost',
-        3: 'Very High Cost'
-    }
     data['target_label'] = data['target'].map(cost_labels)
-    cost_categories = ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']
+    return data
 
-    palette = {
-        'Very Low Cost': 'green',
-        'Low Cost': 'blue',
-        'High Cost': 'purple',
-        'Very High Cost': 'red'
+def get_layout_settings(column_data):
+    """Bestimmt die Layout-Einstellungen basierend auf den Dateneigenschaften"""
+    unique_values = column_data.dropna().unique()
+    is_binary = set(unique_values).issubset({0, 1})
+    return {
+        'is_binary': is_binary,
+        'y_range': [-0.1, 1.1] if is_binary else None,
+        'y_ticks': (["No", "Center", "Yes"], [0, 0.5, 1]) if is_binary else None
+
     }
+def calculate_statistics(data, column, categories):
+    stats = []
+    for label in categories:
+        subset = data[data['target_label'] == label]
+        stats.append({
+            'mean': subset[column].mean(),
+            'values': subset[column],
+            'count': len(subset)
+        })
+    return stats
 
-    for column in data.columns[:-2]:
-        plt.figure(figsize=(6, 6))
+def create_plotly_figure(column_name, stats, layout_settings):
+    fig = go.Figure()
+    mean_values = []
+    # Box-Plots für jede Kategorie
+    for idx, (category, stat) in enumerate(zip(cost_categories, stats)):
+        fig.add_trace(go.Box(
+            y=stat['values'],
+            name=category,
+            marker_color=palette[category],
+            boxpoints='all',
+            jitter=0.3,
+            pointpos=-1.8
+        ))
+        mean_values.append(stat['mean'])
+    # Mittelwert-Linie
+    fig.add_trace(go.Scatter(
+        x=cost_categories,
+        y=mean_values,
+        mode='lines+markers',
+        name='Mean Value per Class',
+        line=dict(color='black', width=2),
+        marker=dict(size=8)
+    ))
+    # Layout anpassen
+    fig.update_layout(
+        title=column_name,
+        yaxis_title='Value',
+        xaxis_title='',
+        showlegend=True,
+        legend_title='Legend'
+    )
+    if layout_settings['is_binary']:
+        fig.update_layout(
+            yaxis=dict(
+                range=layout_settings['y_range'],
+                ticktext=layout_settings['y_ticks'][0],
+                tickvals=layout_settings['y_ticks'][1]
+            ),
+            shapes=[dict(
+                type='line',
+                yref='y',
+                y0=0.5,
+                y1=0.5,
+                xref='paper',
+                x0=0,
+                x1=1,
+                line=dict(color='black', width=0.5)
+            )]
+        )
+    return fig
 
-        mean_values = []
-        for idx, label in enumerate(cost_categories):
-            subset = data[data['target_label'] == label]
-            y = subset[column]
-
-            unique_values = subset[column].dropna().unique()
-            if set(unique_values).issubset({0, 1}):
-                # No jitter for 0, 1
-                plt.scatter([idx] * len(subset), y, color=palette[label], alpha=0.7, edgecolor='k', s=40)
-            else:
-                # Apply jitter to other values
-                x = np.random.normal(loc=idx, scale=0.08, size=len(subset))
-                plt.scatter(x, y, color=palette[label], alpha=0.7, edgecolor='k', s=40)
-
-            mean_value = subset[column].mean()
-            mean_values.append(mean_value)
-
-        # Draw line graph for mean values
-        plt.plot(range(len(cost_categories)), mean_values, color='black', marker='o', linestyle='-', label='Mean Value per Class', linewidth=2)
-
-        unique_values = data[column].dropna().unique()
-        if set(unique_values).issubset({0, 1}):
-            plt.ylim(-0.1, 1.1)
-            plt.yticks([0, 0.5, 1], labels=["No", "Center", "Yes"])
-            plt.axhline(0.5, color='black', linestyle='-', linewidth=0.5)
-
-        # Styling
-        plt.ylabel('Value')
-        plt.xlabel('')
-        plt.title(column)
-        plt.xticks(ticks=range(len(cost_categories)), labels=cost_categories)
-        plt.legend(title='Legend', loc='upper right')
-        plt.tight_layout()
-        '''
-        INSTRUCTIONS
-        plt.show() only shows plots without saving
-        plt.savefig() & plt.close() saves images into Plots directory
-        You may want to chose one or the other
-        '''
-        plt.show()
-        #plt.savefig(f'../Plots/Curve_{column}.png')
-        #plt.close()
+def regression_curve_plot(columns, target, use_plotly=False):
+    """Hauptfunktion für die Erstellung der Regressionsplots"""
+    data = prepare_data(columns, target)
+    figures = []
+    for column in data.columns[:-2]:  # Exclude target and target_label columns
+        layout_settings = get_layout_settings(data[column])
+        stats = calculate_statistics(data, column, cost_categories)
+        if use_plotly:
+            fig = create_plotly_figure(column, stats, layout_settings)
+            figures.append(fig)
+        #else wenn ich matplotlib benutzen will
+    return figures if use_plotly else None
