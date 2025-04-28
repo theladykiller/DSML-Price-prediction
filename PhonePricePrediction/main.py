@@ -3,6 +3,7 @@ from dash import dcc, html
 from dash.dependencies import Input, Output, State
 from PhonePricePrediction.PlotCreation.constants import cost_labels, cost_categories,palette
 from PhonePricePrediction.HelperMethods.fileRead import file_read
+from PhonePricePrediction.HelperMethods.dataScale import data_scale
 from PhonePricePrediction.PlotCreation.barPlot import bar_plot
 from PhonePricePrediction.PlotCreation.regressionCurvePlot import regression_curve_plot
 from PhonePricePrediction.PlotCreation.highToLowEndPlot import low_to_high_end_plot
@@ -15,6 +16,9 @@ x_train, y_train, x_test = file_read()
 x_train = x_train.astype(float)
 y_train = y_train.astype(int)
 x_test = x_test.astype(float)
+
+# scale
+x_train_scaled, x_test_scaled = data_scale(x_train, x_test)
 
 app = dash.Dash(__name__)
 
@@ -70,7 +74,11 @@ def update_plots(plot_type):
         'regression': regression_curve_plot,
         'highlow': low_to_high_end_plot
     }
-    figures = plot_functions[plot_type](x_train, y_train, use_plotly=True)
+    if plot_type == 'highlow':
+        figures = plot_functions[plot_type](x_train_scaled, y_train, use_plotly=True)
+    else:
+        figures = plot_functions[plot_type](x_train, y_train, use_plotly=True)
+
     return [dcc.Graph(figure=fig) for fig in figures]
 
 
@@ -85,7 +93,7 @@ def make_predictions(n_clicks, k):
         return ''
 
     try:
-        predictions, details = knn_predict(x_train, y_train, x_test, k)
+        predictions, details = knn_predict(x_train_scaled, y_train, x_test_scaled, k)
         prediction_list = [
             html.P(f"Test point {d['test_point']}: {cost_labels[d['predicted_price']]} "
                    f"(Average distance: {d['avg_distance']:.2f})")
