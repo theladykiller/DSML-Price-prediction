@@ -1,7 +1,9 @@
-from pathlib import Path
 import pandas as pd
 
+from pathlib import Path
+
 def file_read():
+    # Declare data directory
     data_dir = Path(__file__).resolve().parent.parent.parent / "data"
 
     # Load the CSV files
@@ -13,7 +15,7 @@ def file_read():
     y_train = train_df["price_range"]  # Values 0, 1, 2, 3
     x_test = test_df.drop(columns=["id"])
 
-    # Conditionally rename columns
+    # Rename columns
     rename_conditions = {
         'battery_power': 'Battery Power',
         'blue': 'Bluetooth',

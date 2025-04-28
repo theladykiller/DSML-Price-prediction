@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 def knn_predict(x_train, y_train, x_test, k):
-    # Datentyp-Überprüfung und Konvertierung
+    # Convert to numeric
     x_train = np.asarray(x_train, dtype=np.float64)
     y_train = np.asarray(y_train, dtype=np.int64)
     x_test = np.asarray(x_test, dtype=np.float64)
@@ -22,7 +22,7 @@ def knn_predict(x_train, y_train, x_test, k):
 
         # Store all details for this prediction
         prediction_details = {
-            "test_point": i,
+            "test_point": i+1,
             "predicted_price": yhat,
             "nearest_neighbors": knn_indices.tolist(),
             "neighbor_labels": knn_labels.tolist(),

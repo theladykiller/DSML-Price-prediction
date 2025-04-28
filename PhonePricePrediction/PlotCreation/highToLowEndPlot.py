@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
-from .constants import cost_labels, cost_categories, palette
+
+from constants import cost_labels, cost_categories, palette
 
 def low_to_high_end_plot(columns, target, use_plotly=False):
     # Calculate the mean value for each data point (row)
