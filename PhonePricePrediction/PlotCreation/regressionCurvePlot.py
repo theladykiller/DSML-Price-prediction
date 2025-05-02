@@ -33,17 +33,42 @@ def calculate_statistics(data, column, categories):
 def create_plotly_figure(column_name, stats, layout_settings):
     fig = go.Figure()
     mean_values = []
-    # Box-Plots für jede Kategorie
-    for idx, (category, stat) in enumerate(zip(cost_categories, stats)):
-        fig.add_trace(go.Box(
-            y=stat['values'],
-            name=category,
-            marker_color=palette[category],
-            boxpoints='all',
-            jitter=0.3,
-            pointpos=-1.8
-        ))
-        mean_values.append(stat['mean'])
+    
+    # Wenn binäre Daten vorliegen, erstelle Balkendiagramm statt Boxplot
+    if layout_settings['is_binary']:
+        for idx, (category, stat) in enumerate(zip(cost_categories, stats)):
+            # Berechne den Anteil der "Yes"-Werte (1-Werte)
+            yes_proportion = (stat['values'] == 1).mean()
+            no_proportion = 1 - yes_proportion
+            
+            # Füge Balken für "No" und "Yes" hinzu
+            fig.add_trace(go.Bar(
+                x=[category],
+                y=[no_proportion],
+                name='No',
+                offsetgroup=category,
+                marker_color='lightgray'
+            ))
+            fig.add_trace(go.Bar(
+                x=[category],
+                y=[yes_proportion],
+                name='Yes',
+                offsetgroup=category,
+                marker_color=palette[category]
+            ))
+            mean_values.append(yes_proportion)
+    else:
+        # Für nicht-binäre Daten den ursprünglichen Boxplot beibehalten
+        for idx, (category, stat) in enumerate(zip(cost_categories, stats)):
+            fig.add_trace(go.Box(
+                y=stat['values'],
+                name=category,
+                marker_color=palette[category],
+                boxpoints='all',
+                jitter=0.3,
+                pointpos=-1.8
+            ))
+            mean_values.append(stat['mean'])
     # Mittelwert-Linie
     fig.add_trace(go.Scatter(
         x=cost_categories,
@@ -56,7 +81,7 @@ def create_plotly_figure(column_name, stats, layout_settings):
     # Layout anpassen
     fig.update_layout(
         title=column_name,
-        yaxis_title='Value',
+        yaxis_title='Proportion' if layout_settings['is_binary'] else 'Value',
         xaxis_title='',
         showlegend=True,
         legend_title='Legend'
@@ -64,20 +89,10 @@ def create_plotly_figure(column_name, stats, layout_settings):
     if layout_settings['is_binary']:
         fig.update_layout(
             yaxis=dict(
-                range=layout_settings['y_range'],
-                ticktext=layout_settings['y_ticks'][0],
-                tickvals=layout_settings['y_ticks'][1]
+                range=[0, 1],
+                tickformat=',.0%'
             ),
-            shapes=[dict(
-                type='line',
-                yref='y',
-                y0=0.5,
-                y1=0.5,
-                xref='paper',
-                x0=0,
-                x1=1,
-                line=dict(color='black', width=0.5)
-            )]
+            barmode='stack'
         )
     return fig
 
