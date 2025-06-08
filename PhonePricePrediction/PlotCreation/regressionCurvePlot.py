@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 
-from .constants import cost_labels, cost_categories,palette
+from PlotCreation.constants import cost_labels, cost_categories,palette
 
 def prepare_data(columns, target):
     data = pd.DataFrame(columns)
