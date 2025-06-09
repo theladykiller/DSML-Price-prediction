@@ -30,7 +30,3 @@ First navigate to the Project folder and use the following commands
 * python report.py  
 *…to execute the entire program functionality in a linear sequence.*  
 NOTE: 4 BROWSER TABS WILL OPEN
-
-## TODO
-*Remark: Project Logistics ist im Documents Dir zu finden*
-* Powerpoint als PDF (15-20 Folien) - Siehe Project Logistics (Seite 14)
