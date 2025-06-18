@@ -2,7 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 
-from PlotCreation.constants import cost_labels, cost_categories,palette
+#from PlotCreation.constants import cost_labels, cost_categories,palette
+from .constants import cost_labels, cost_categories, palette
 
 def prepare_data(columns, target):
     data = pd.DataFrame(columns)
@@ -66,15 +67,11 @@ def create_plotly_figure(column_name, stats, layout_settings):
                 offsetgroup=0
             ))
 
-        # Regressionsline für binäre Daten
-        # Konvertiere Kategorien in numerische Werte für Regression
         x_numeric = list(range(len(cost_categories)))
-        
-        # Berechne Regression
+
         coeffs = np.polyfit(x_numeric, yes_proportions, 1)
         trend = np.poly1d(coeffs)
-        
-        # Füge Regressionslinie hinzu
+
         fig.add_trace(go.Scatter(
             x=cost_categories,
             y=[trend(x) for x in x_numeric],
@@ -83,7 +80,6 @@ def create_plotly_figure(column_name, stats, layout_settings):
             line=dict(color='black', width=2, dash='dash')
         ))
 
-        # Füge auch die tatsächlichen Punkte hinzu
         fig.add_trace(go.Scatter(
             x=cost_categories,
             y=yes_proportions,
@@ -93,7 +89,6 @@ def create_plotly_figure(column_name, stats, layout_settings):
         ))
 
     else:
-        # Für nicht-binäre Daten den ursprünglichen Boxplot beibehalten
         mean_values = []
         for idx, (category, stat) in enumerate(zip(cost_categories, stats)):
             fig.add_trace(go.Box(
