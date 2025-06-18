@@ -24,7 +24,7 @@ def save_figures_to_html(figures, filename, title):
     os.makedirs("Plots", exist_ok=True)
     path = os.path.join("Plots", filename)
     
-    # Verwende String-Builder für bessere Performance
+    # String-Builder
     html_content = [f"<html><head><title>{title}</title></head><body>"]
     html_content.append(f"<h1 style='text-align:center'>{title}</h1>")
     
