@@ -7,24 +7,21 @@ def knn_predict(x_train, y_train, x_test, k):
     y_train = np.asarray(y_train, dtype=np.int64)
     x_test = np.asarray(x_test, dtype=np.float64)
 
+    # Vektorisierte Distanzberechnung für alle Testpunkte gleichzeitig
+    distances = np.sqrt(((x_test[:, np.newaxis] - x_train) ** 2).sum(axis=2))
+    knn_indices = np.argpartition(distances, k, axis=1)[:, :k]
     results = []
     all_details = []
-
-    for i, tp in enumerate(x_test):
-        # Calculate Manhattan distance to all training points
-        distances = np.sum(np.abs(x_train - tp), axis=1)
-        knn_indices = np.argsort(distances)[:k]
-        knn_labels = y_train[knn_indices]
+    
+    for i, indices in enumerate(knn_indices):
+        knn_labels = y_train[indices]
         yhat = int(pd.Series(knn_labels).mode()[0])
-
-        # Compute mean Manhattan distance of neighbors
-        mean_distance = float(np.mean(distances[knn_indices]))
-
-        # Store all details for this prediction
+        mean_distance = float(np.mean(distances[i, indices]))
+        
         prediction_details = {
             "test_point": i+1,
             "predicted_price": yhat,
-            "nearest_neighbors": knn_indices.tolist(),
+            "nearest_neighbors": indices.tolist(),
             "neighbor_labels": knn_labels.tolist(),
             "avg_distance": mean_distance
         }
