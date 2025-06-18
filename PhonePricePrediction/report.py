@@ -23,13 +23,20 @@ import os
 def save_figures_to_html(figures, filename, title):
     os.makedirs("Plots", exist_ok=True)
     path = os.path.join("Plots", filename)
+    
+    # Verwende String-Builder für bessere Performance
+    html_content = [f"<html><head><title>{title}</title></head><body>"]
+    html_content.append(f"<h1 style='text-align:center'>{title}</h1>")
+    
+    for fig in figures:
+        inner = pio.to_html(fig, include_plotlyjs='cdn', full_html=False)
+        html_content.append(inner + "<hr>")
+    
+    html_content.append("</body></html>")
+    
     with open(path, 'w', encoding='utf-8') as f:
-        f.write(f"<html><head><title>{title}</title></head><body>\n")
-        f.write(f"<h1 style='text-align:center'>{title}</h1>\n")
-        for fig in figures:
-            inner = pio.to_html(fig, include_plotlyjs='cdn', full_html=False)
-            f.write(inner + "<hr>\n")
-        f.write("</body></html>")
+        f.write('\n'.join(html_content))
+    
     webbrowser.open(path)
 
 def save_knn_results_to_html(details, filename, title):
