@@ -41,7 +41,7 @@ def make_predictions(n_clicks, k):
 
         predictions, details = knn_predict(x_train_scaled, y_train, x_test_scaled, k)
         
-        # Gemeinsames Style für alle Header-Zellen
+        # Gemeinsames Style für alle Header
         header_style = {
             'textAlign': 'center', 
             'backgroundColor': 'black',
@@ -52,7 +52,6 @@ def make_predictions(n_clicks, k):
             'zIndex': '1'
         }
         
-        # Farben für jede Preis-Kategorie
         price_colors = {
             'Very Low Cost': '#28a745',    # Grün
             'Low Cost': '#17a2b8',         # Blau
@@ -60,7 +59,61 @@ def make_predictions(n_clicks, k):
             'Very High Cost': '#dc3545'    # Rot
         }
         
-        # Tabellen-Header mit gemeinsamem Style
+        # Zähle die Vorhersagen pro Kategorie
+        category_counts = {}
+        for d in details:
+            category = cost_labels[d['predicted_price']]
+            category_counts[category] = category_counts.get(category, 0) + 1
+        
+        # Erstelle Zusammenfassungstabelle
+        summary_header = [
+            html.Thead(html.Tr([
+                html.Th("Price Category", style=header_style),
+                html.Th("Count", style=header_style),
+                html.Th("Percentage", style=header_style)
+            ]))
+        ]
+        
+        summary_rows = []
+        total_predictions = len(details)
+        
+        for category in ['Very Low Cost', 'Low Cost', 'High Cost', 'Very High Cost']:
+            count = category_counts.get(category, 0)
+            percentage = (count / total_predictions * 100) if total_predictions > 0 else 0
+            
+            summary_rows.append(html.Tr([
+                html.Td(category, style={
+                    'textAlign': 'center', 
+                    'padding': '8px', 
+                    'backgroundColor': price_colors[category],
+                    'color': 'white',
+                    'fontWeight': 'bold'
+                }),
+                html.Td(str(count), style={
+                    'textAlign': 'center', 
+                    'padding': '8px', 
+                    'backgroundColor': '#f8f9fa'
+                }),
+                html.Td(f"{percentage:.1f}%", style={
+                    'textAlign': 'center', 
+                    'padding': '8px', 
+                    'backgroundColor': '#f8f9fa'
+                })
+            ]))
+        
+        summary_table = html.Table(
+            summary_header + [html.Tbody(summary_rows)],
+            style={
+                'width': '100%',
+                'borderCollapse': 'collapse',
+                'border': '1px solid #ddd',
+                'fontFamily': 'Segoe UI, Arial, sans-serif',
+                'fontSize': '14px',
+                'marginBottom': '20px'
+            }
+        )
+        
+        # für detaillierte Tabelle
         table_header = [
             html.Thead(html.Tr([
                 html.Th("Test Point", style=header_style),
@@ -68,14 +121,11 @@ def make_predictions(n_clicks, k):
                 html.Th("Average Distance", style=header_style)
             ]))
         ]
-        
-        # Tabellen-Zeilen mit farbiger Kategorisierung
+
         table_rows = []
         for i, d in enumerate(details[:1000]):
-            # Farbe basierend auf der Preiskategorie
             price_category = cost_labels[d['predicted_price']]
             price_color = price_colors[price_category]
-
             bg_color = '#f8f9fa' if i % 2 == 0 else 'white'
             
             row = html.Tr([
@@ -100,8 +150,8 @@ def make_predictions(n_clicks, k):
             ])
             table_rows.append(row)
         
-        #Tabelle mit Container für Scroll
-        table = html.Table(
+        # die detaillierte Tabelle
+        detail_table = html.Table(
             table_header + [html.Tbody(table_rows)],
             style={
                 'width': '100%',
@@ -112,29 +162,37 @@ def make_predictions(n_clicks, k):
             }
         )
         
-        #Legende für die Farben
-        legend_items = []
-        for category, color in price_colors.items():
-            legend_items.append(html.Span([
-                html.Span("■", style={'color': color, 'fontSize': '20px', 'marginRight': '5px'}),
-                html.Span(category, style={'marginRight': '20px', 'fontSize': '12px'})
-            ]))
-        
         return html.Div([
-            html.H4(f'Predictions with k = {k}', style={'color': 'black', 'fontWeight': 'bold', 'marginBottom': '20px'}),
+            html.H4(f'Predictions with k={k}', style={
+                'color': 'black', 
+                'marginBottom': '20px',
+                'fontSize': '28px',
+                'fontWeight': 'bold'
+            }),
             html.Div([
-                html.P(f"Total predictions: {len(details)}", style={'color': '#666', 'fontWeight': 'bold', 'fontSize': '12px', 'marginBottom': '10px'}),
-                # Legende
-                html.Div(legend_items, style={
-                    'marginBottom': '15px', 
-                    'padding': '10px', 
-                    'backgroundColor': '#f8f9fa', 
-                    'borderRadius': '4px',
-                    'textAlign': 'center'
+                html.P(f"Total predictions: {len(details)}", style={'color': '#666', 'fontSize': '12px', 'marginBottom': '10px'}),
+                
+                # Zusammenfassungstabelle
+                html.H5("Summary by Price Category", style={
+                    'color': 'black', 
+                    'marginBottom': '10px',
+                    'fontSize': '20px',
+                    'fontWeight': 'bold'
                 }),
-                # Container mit fester Höhe und Scroll
                 html.Div(
-                    table, 
+                    summary_table,
+                    style={'width': '50%', 'margin': '0 auto 20px auto'}  # Schmaler und zentriert
+                ),
+                
+                # Detaillierte Tabelle
+                html.H5("Detailed Predictions", style={
+                    'color': 'black', 
+                    'marginBottom': '10px',
+                    'fontSize': '20px',
+                    'fontWeight': 'bold'
+                }),
+                html.Div(
+                    detail_table, 
                     style={
                         'maxHeight': '400px', 
                         'overflowY': 'auto',
