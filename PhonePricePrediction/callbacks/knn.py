@@ -51,7 +51,7 @@ def make_predictions(n_clicks, k):
             'top': '0',
             'zIndex': '1'
         }
-        
+
         price_colors = {
             'Very Low Cost': '#28a745',    # Grün
             'Low Cost': '#17a2b8',         # Blau
